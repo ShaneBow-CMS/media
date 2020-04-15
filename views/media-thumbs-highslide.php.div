@@ -1,0 +1,22 @@
+ <?php $col_class = panel_col_class(count($media)); ?>
+ <?php foreach ($media as $m): ?>
+  <div class="<?= $col_class ?>" style="text-align:center">
+   <div class="thumbnail same-height">
+    <div class="thumb ar ar3x2">
+     <a href="/uploads/<?= $m['id'] ?>.jpg" class="highslide" onclick="return hs.expand(this)">
+      <img src="/uploads/<?= $m['id'] ?>.jpg" class="img-responsive img-rounded"
+            alt="Highslide JS" title="Click to enlarge" />
+     </a>
+     <div class='highslide-caption'>
+      <b><?= $m['title'] ?></b> &mdash; <?= $m['caption'] ?><br><small>Photo Credit: <?= $m['attribution'] ?></small>
+     </div>
+    </div>
+
+    <div class="caption text-center">
+     <h6 class="text-semibold no-margin">
+      <a href="/media/details/<?= $m['id'] ?>"><?= $m['title'] ?></a>
+      <small class="display-block"><?= $m['caption'] ?></small></h6>
+    </div>
+   </div>
+  </div>
+ <?php endforeach; ?>

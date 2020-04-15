@@ -1,0 +1,19 @@
+.zoom-image {
+	color: #fff;
+	display: inline-block;
+	text-align: center;
+	position: absolute;
+	top: 0;left: 0;width: 100%;height: 100%;
+	opacity: 0;
+	-webkit-transition: all .15s ease-in-out;
+	-o-transition: all .15s ease-in-out;
+	transition: all .15s ease-in-out;
+	}
+.zoom-image i {
+	font-size: 32px;
+	position: absolute;
+	top: 50%;left: 50%;
+	margin-top: -16px;
+	margin-left: -16px;
+	}
+.thumb:hover .zoom-image {background-color: rgba(0,0,0,.6);opacity: 1}

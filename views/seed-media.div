@@ -1,0 +1,17 @@
+ <div class="col-md-4">
+  <div class="panel panel-red">
+   <div class="panel-heading">Create Media Tables</div>
+   <div class="panel-body">
+    <p>Drops then creates the following tables:</p>
+    <ul>
+     <li>media &rarr; media metadata</li>
+     <li>media2objs &rarr; map of media to objects</li>
+    </ul>
+    <p>Net effect is a pristine media database.</p>
+   </div>
+   <form action="/media/seed" method="post" class="panel-footer">
+    <input name="auth" class="form-control" placeholder="Auth Code">
+    <button type="submit" class="btn btn-outline btn-danger btn-xs">OK</button>
+   </form>
+  </div>
+ </div>

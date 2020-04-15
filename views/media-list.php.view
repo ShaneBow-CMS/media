@@ -1,0 +1,68 @@
+<style>
+~~cms/media/dropzone/5.1.1/dropzone.css
+~~cms/media/ci/assets/media-cms.css
+tbody tr {cursor:pointer}
+</style>
+
+<table id="media-table" class="table table-striped table-bordered table-hover">
+ <thead>
+  <tr>
+   <th>ID</th>
+   <th>Owner</th>
+   <th width="150">Thumb</th>
+   <th>Title</th>
+   <th>Caption</th>
+   <th>Date</th>
+  </tr>
+ </thead>
+ <tbody>
+   <?php foreach ($media as $m): ?>
+    <tr class="odd gradeX" data-id="<?=$m['id']?>"
+			data-attribution="<?=$m['attribution']?>">
+     <td>
+      <?= $m['id'] ?>
+     </td>
+     <td>
+      <a href="/user/profile/<?= $m['owner_id'] ?>" class="profile-thumb">
+       <img src="<?= usr_img($m['owner_id']) ?>" class="img-circle img-md" alt="">
+      </a>
+     </td>
+     <td>
+      <div class="thumb ar ar3x2">
+       <a href="/uploads/<?= $m['file'] ?>" class="highslide" onclick="return hs.expand(this)">
+        <img src="/uploads/<?= $m['file'] ?>" class="img-responsive img-rounded"
+           alt="Highslide JS" title="Click to enlarge" />
+       </a>
+      </div>
+     </td>
+     <td><?=$m['title']?></td>
+     <td><?=$m['caption']?></td>
+     <td><?= ymd($m['debut']) ?></td>
+    </tr>
+   <?php endforeach; ?>
+ </tbody>
+</table>
+<div class="row text-center">
+ <?= $this->pagination->create_links(); ?>
+</div>
+
+~~cms/media/ci/views/dlg-media-update-meta.div
+<script src="/assets/js/cms.js"></script>
+<script>
+	var $frm = $('#dlg-media-edit form');
+
+	// fix form to allow updates
+	$frm.prepend('<input name="id" type="hidden" />');
+	$frm.addClass('update');
+
+	// populate form & launch dialog
+	$('#media-table tbody tr').click(function() {
+		var $my = $(this), $tds = $(this).find('td');
+		$frm.find('[name=id]').val($my.data('id'));
+		$frm.find('[name=title]').val($tds.eq(3).html());
+		$frm.find('[name=caption]').val($tds.eq(4).html());
+		$frm.find('[name=attribution]').val($my.data('attribution'));
+		$frm.closest('.modal').modal("show");
+		});
+
+</script>

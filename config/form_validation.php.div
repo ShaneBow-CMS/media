@@ -1,0 +1,6 @@
+	'media-upload'=> [
+		['field'=> 'title',      'rules'=> 'required|max_length[255]'],
+//		['field'=> 'debut',      'rules'=> 'required'],
+		['field'=> 'attribution','rules'=> 'max_length[255]'],
+		['field'=> 'caption',    'rules'=> 'max_length[65535]']
+		],

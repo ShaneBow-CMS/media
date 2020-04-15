@@ -1,0 +1,5 @@
+<div class="modal fade" id="dlg-media-edit" tabindex="-1" role="dialog">
+ <div class="modal-dialog">
+  ~~cms/media/ci/views/dropzone-upload.frm
+ </div>
+</div>

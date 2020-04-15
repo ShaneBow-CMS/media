@@ -1,0 +1,30 @@
+<div class="modal fade" id="dlg-media-picker" tabindex="-1">
+ <div class="modal-dialog">
+  <div class="modal-content">
+   <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h6 class="modal-title">Media Picker</h6>
+   </div>
+
+   <div class="modal-body">
+
+    <ul class="nav nav-tabs">
+     <li class="active"><a href="#media-remote" data-toggle="tab"><i class="icon-database-menu"></i>  Remote</a></li>
+     <li><a href="#media-local" data-toggle="tab"><i class="icon-database-upload"></i> Upload</a></li>
+    </ul>
+
+    <div class="tab-content">
+     <div class="tab-pane fade in active" id="media-remote">
+      <div id="mediadb" class="category-content"></div>
+      <div id="mediadb-paging"></div>
+     </div>
+     <div class="tab-pane fade" id="media-local">
+      ~~cms/media/ci/views/dropzone-upload.frm
+     </div>
+    </div>
+
+   </div>
+
+  </div>
+ </div>
+</div>

@@ -1,0 +1,19 @@
+    <div id="media-gallery" class="row same-height-row">
+     <?php foreach ($media as $m): ?>
+      <div class="col-lg-3 col-sm-4 col-xs-6 mp-media" style="text-align:center">
+       <div class="thumbnail same-height-always">
+        <div class="thumb ar ar3x2">
+         <img src="/uploads/<?= $m['file'] ?>" mid="<?= $m['id'] ?>"
+             class="img-responsive img-rounded" title="Click to insert in article" />
+         <span class="delete">&times;</span>
+        </div>
+
+        <div class="caption text-center">
+         <h6 class="text-semibold no-margin">
+          <?= $m['title'] ?>
+          <small class="display-block"><?= $m['caption'] ?></small></h6>
+        </div>
+       </div>
+      </div>
+     <?php endforeach; ?>
+    </div>

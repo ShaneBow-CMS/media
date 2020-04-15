@@ -1,0 +1,9 @@
+    <div class="thumb ar ar3x2">
+     <a href="/uploads/<?= $m['id'] ?>.jpg" class="highslide" onclick="return hs.expand(this)">
+      <img src="/uploads/<?= $m['id'] ?>.jpg" class="img-responsive img-rounded"
+            alt="Highslide JS" title="Click to enlarge" />
+     </a>
+     <div class='highslide-caption'>
+      <b><?= $m['title'] ?></b> &mdash; <?= $m['caption'] ?><br><small>Photo Credit: <?= $m['attribution'] ?></small>
+     </div>
+    </div>
