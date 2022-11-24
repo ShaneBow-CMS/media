@@ -1,8 +1,8 @@
 <?php
 class Mmedia extends MY_Model {
 
-	var $upload_path;
-	var $upload_path_url;
+	protected $upload_path;
+	protected $upload_path_url;
 
 	static $media_types = [
 		1 => 'jpg',
@@ -115,6 +115,19 @@ class Mmedia extends MY_Model {
 		}
 
 	/**
+	* get media by list of ids
+	* in csv order
+	*/
+	public function get_media($ids) {
+		$it = $this->db->select('m.*')
+			->where("m.id in ($ids)")
+			->get('media m')
+			->result_array();
+
+		return $this->add_exts($it);
+		}
+
+	/**
 	* remove all records in 'media2objs' for the given object
 	*/
 	public function delete_object2media($otype,$oid) {
@@ -152,3 +165,4 @@ class Mmedia extends MY_Model {
 		return $this->insert_object2media($otype,$oid,$mid_csv);
 		}
 	}
+/* ~~cms/media/ci/models/Mmedia.php 20220704 */

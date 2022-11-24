@@ -1,13 +1,13 @@
 /**
-* MediaPicker.2.3.1
+* cms/media/ci/assets/MediaPicker.20220101.js
 * http://www.shanebow.com
 *
-* Licensed under the MIT license.
-* http://www.opensource.org/licenses/mit-license.php
-*
-* Copyright 2018, ShaneBow
+* Copyright 2018 - 2020, ShaneBow
 * http://www.shanebow.com
 *
+* 20211120 rts 3.1.2 added selector opt to handle tables
+* 20211023 rts 3.1.1 added onChange()
+* 20201209 rts 3.0.0 added search capability
 * 20190707 rts 2.3.1 added ImageUploader
 * 20180331 rts 2.0.0 support multiple instance, append, replace
 *
@@ -16,56 +16,45 @@
 	'use strict';
 
 	var _instance;
-	var $gal = $('#mediadb');
-	var $pag = $('#mediadb-paging');
+	var $formUpload = $('form.dropzone');
 	var exts = ['','jpg','png','gif'];
 	var defaults = {
 		$dlg: $('#dlg-media-picker'),
 		mode:'replace', // or 'append'
 		btn: null,
+		selector: null, // used for $el.on('click', selector, function(){}...
 		verbose:!1
 		};
-
-	function thumb(meta) {
-		var ext = exts[meta.type_id];
-		return '<div class="thumbnail"><div class="thumb ar ar3x2">' +
-			'<img src="/uploads/' + meta.id + '.' + ext +
-			'" mid="' + meta.id + '" alt="' + meta.caption +
-			'" title="' + meta.title + '">' +
-			'"<span class="zoom-image"><i class="icon-plus22"></i></span></div>' +
-
-			/*** @TODO fix highslide zIndex from modal
-				'<a href="/uploads/' + meta.id + '.' + ext + '" class="highslide" onclick="return hs.expand(this)">' +
-				meta.title.substring(0,13) + '</a>' +
-			***/
-				'<i>' + meta.title.substring(0,13) + '</i>' +
-
-			'</div>';
-		}
-
-	function fetch(page) {
-		$pag.html('<i>loading page ' + page + '...</i>');
-		UBOW.ajax('/media/fetch/'+page, {}, function(err,dat,msg) {
-			if (err) return UBOW.handleAjaxError(err,dat,msg);
-			$gal.empty();
-			$.each(dat.imgs,function(i,meta){$gal.append(thumb(meta));});
-			$pag.html(dat.page);
-			});
-		}
-
-	$pag.on('click', 'a', function(e) {
-		e.preventDefault();
-		fetch($(this).data("ci-pagination-page"));
+	const thumbMarkup = (meta) => `
+		<div class="thumbnail">
+		 <div class="thumb ar ar3x2">
+		  <img src="/uploads/${meta.file}" mid="${meta.id}"
+		       alt="${meta.caption}" title="${meta.title}" />
+		  <span class="zoom-image"><i class="icon-plus22"></i></span>
+		 </div>
+		 <i>${meta.title.substring(0,13)}</i>
+		</div>`;
+	const remoteTab = new UBOW.PagedList('#media-remote', {
+		url: '/media/fetch2/',
+		per_page: 25,
+		container: '<div class="center"></div>',
+		markup: thumbMarkup,
+		auto_load: true
 		});
-
-	fetch('');
+	const searchTab = new UBOW.PagedList('#media-search', {
+		url: '/media/fetch2/',
+		per_page: 25,
+		container: '<div></div>',
+		markup: thumbMarkup,
+		auto_load: false
+		});
 
 	Dropzone.autoDiscover = false;
 	function uploadErr(file, e){
 		file.status = Dropzone.QUEUED;
 		console.log('upload ' + file.name + ' error: %o', e);
 		if (e.hasOwnProperty('err'))
-			UBOW.handleAjaxError(e.err,e.dat,e.msg,$form);
+			UBOW.handleAjaxError(e.err,e.dat,e.msg,$formUpload);
 		else
 			UBOW.flashError('upload ' + file + ' error: ' + e);
 		}
@@ -95,7 +84,7 @@
 			maxFiles: 1,
 			clickable:'.dropzone-previews',
 			previewsContainer: '.dropzone-previews',
-			acceptedFiles: '.jpg', // "audio/*,image/*,.psd,.pdf",
+			acceptedFiles: '.jpg,.png,.gif', // "audio/*,image/*,.psd,.pdf",
 			dictDefaultMessage: 'Drop file to upload <span>or CLICK</span>',
 			autoProcessQueue: false,
 			init: function() {
@@ -115,7 +104,7 @@
 		return dropper;
 		}
 
-	createDropzone(defaults.$dlg.find('form'), '/media/upload_single');
+	createDropzone(defaults.$dlg.find('form.dropzone'), '/media/upload_single');
 
 	function reloadPage() {
 		UBOW.flashSuccess("OK x reloading...");
@@ -132,12 +121,21 @@
 		_instance.selected($img);
 		}
 
-	$('#mediadb').on('click', '.thumbnail .zoom-image', function(e){
+	$('.media-picker').on('click', '.thumbnail .zoom-image', function(e){
 		console.log("clicked thumb zoom");
 		if (!_instance)
 			return UBOW.flashError('MediaPicker>> No current instance');
 		var $img = $(this).siblings('img');
 		_instance.selected($img);
+		});
+
+	$('.media-picker form.search').on('submit', function(e) {
+		e.preventDefault();
+		const term = $(this).find('input').val();
+		UBOW.flashSuccess('seach: ' + term );
+		searchTab.opts.extra = {like: term};
+		searchTab.show();
+		$('.nav a[href="#media-search"]').tab('show');
 		});
 
 	function MediaPicker(el, options) {	
@@ -155,10 +153,13 @@
 
 	MediaPicker.prototype._init = function(content) {
 		var my=this, s = my.opts;
-		my.$btn = s.btn? $(s.btn) : $el;
-		my.$btn.on('click', function(e) {
+		// allow for click on img or a separate button
+		my.$btn = s.btn? $(s.btn) : my.$el;
+		my.$btn.on('click', s.selector, function(e) {
 			e.preventDefault();
 			e.stopImmediatePropagation();
+			// facilitate $el that matches multiple elements
+			my.$clicked = (my.$btn != my.$el)? my.$el : $(this);
 			_instance = my;
 			my.opts.$dlg.modal('show');
 			});
@@ -186,14 +187,17 @@
 			c = $img.attr('alt'),
 			i = $img.attr('mid');
 		if (my.$el.find('[mid=' + i +']').length) return UBOW.flashError('Media already inserted');
-		my.$el.append(
-			'<div class="col-lg-3 col-sm-4 col-xs-6 mp-media" style="text-align:center">'
-			+ '<div class="thumbnail same-height-always">'
-			+ ' <div class="thumb ar ar3x2">'
-			+ '  <img src="' + s + '" mid="' + i + '" class="img-responsive img-rounded" /></div>'
-			+ ' <span class="delete">&times;</span>'
-			+ ' <div class="caption text-center"><h6 class="text-semibold no-margin">'
-			+ t + '<small class="display-block">' + c + '</small></h6></div></div></div>')
+		my.$el.append(`
+			<div class="col-lg-3 col-sm-4 col-xs-6 mp-media" style="text-align:center">
+			 <div class="thumbnail same-height-always">
+			  <div class="thumb ar ar3x2">
+			   <img src="${s}" mid="${i}" class="img-responsive img-rounded" />
+			  </div>
+			  <span class="delete">&times;</span>
+			  <div class="caption text-center">
+          <h6 class="text-semibold no-margin">
+			    ${t}<small class="display-block">${c}</small>
+			   </h6></div></div></div>`)
 			.alignElementsSameHeight();
 		}
 
@@ -203,17 +207,19 @@
 			t = $img.attr('title'),
 			c = $img.attr('alt'),
 			i = $img.attr('mid');
-		my.$el.find('img').attr('src', s).attr('mid', i);
+	//	my.$el.find('img').attr('src', s).attr('mid', i);
+		my.$clicked.find('img').attr('src', s).attr('mid', i);
 		my.opts.$dlg.modal('hide');
 		}
 
 	MediaPicker.prototype.selected=function($img){
 		var my = this;
+	//	if (my.opts.onSelect) return my.opts.onSelect($img);
 		if (my.opts.mode == 'replace')
 			my.replace($img);
 		else
 			my.append($img);
-//		my.$el.trigger('MediaPicker:change', [val, txt]);
+		my.opts.onChange && my.opts.onChange($img, my.$clicked);
 		}
 
 	// simply uploads a file
@@ -225,7 +231,8 @@
 			var $form = $dlg.find('form');
 			var defaults = {
 				url: '/media/upload_special',
-				onSuccess: function(file, resp){}
+				onSuccess: function(file, resp){},
+				acceptedFiles: '.png', // "audio/*,image/*,.psd,.pdf",
 				};
 			my.opts = $.extend({}, defaults, options);
 
@@ -234,7 +241,7 @@
 				paramName: "userfile", // field name to transfer file
 			//	maxFilesize: 1, // MB
 				maxFiles: 1,
-				acceptedFiles: '.png', // "audio/*,image/*,.psd,.pdf",
+				acceptedFiles: my.opts.acceptedFiles, // "audio/*,image/*,.psd,.pdf",
 				dictDefaultMessage: 'Drop file to upload <span>or CLICK</span>',
 				autoProcessQueue: true,
 				init: function() {

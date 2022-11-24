@@ -56,6 +56,7 @@ class Media extends MY_Controller {
 
 	/**
 	* ajax call to fetch paged images
+	* DEPRECATED - use fetch2
 	*/
 	public function fetch() {
 		$this->load->helper('ajax');
@@ -68,6 +69,35 @@ class Media extends MY_Controller {
 			$where = [];
 			$dat['imgs'] = $this->mmedia->paginated_list('/media/fetch', $this->uri->segment(3),
 			                                             25, 5, $order_by, $where);
+			$dat['page'] = $this->pagination->create_links();
+			}
+		catch (Exception $e) {db_error($e->getMessage());}
+		respond(0, "SUCCESS", $dat);
+		}
+
+	/**
+	* ajax call to fetch paged images
+	* works with PagedList.js
+	*/
+	public function fetch2() {
+		$this->load->helper('ajax');
+		if (!$this->_usr)
+			respond(EXIT_ERR_LOGIN, "Log in required", '/user/login');
+
+		$per_page = intval($_POST['per_page']);
+		$where = [];
+		if (isset($_POST['like'])) {
+			$term = $_POST['like'];
+			if ($term[0] == '#')
+				$where = ['id' => substr($term, 1)];
+			else
+				$where = ['title LIKE' => '%'.$_POST['like'].'%'];
+			}
+		$this->load->model('mmedia');
+		try {
+			$order_by = 'debut DESC';
+			$dat['items'] = $this->mmedia->paginated_list('/media/fetch2', $this->uri->segment(3),
+			                                             $per_page, 5, $order_by, $where);
 			$dat['page'] = $this->pagination->create_links();
 			}
 		catch (Exception $e) {db_error($e->getMessage());}
