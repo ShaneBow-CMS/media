@@ -44,7 +44,7 @@ tbody tr {cursor:pointer}
  <?= $this->pagination->create_links(); ?>
 </div>
 
-~~cms/media/ci/views/dlg-media-update-meta.20220101.div
+~~cms/media/ci/views/dlg-media-update-meta.div
 <script src="/assets/js/cms.js"></script>
 <script>
 //	var $frm = $('#dlg-media-edit form');
