@@ -2,7 +2,7 @@
  <?php foreach ($media as $m): ?>
   <div class="<?= $col_class ?>" style="text-align:center">
    <div class="thumbnail same-height">
-    <div class="thumb ar ar3x2">
+    <div class="thumb<?= (count($media) > 1)? ' ar ar3x2':'' ?>">
      <a href="/uploads/<?= $m['id'] ?>.jpg" class="highslide" onclick="return hs.expand(this)">
       <img src="/uploads/<?= $m['id'] ?>.jpg" class="img-responsive img-rounded"
             alt="Highslide JS" title="Click to enlarge" />
