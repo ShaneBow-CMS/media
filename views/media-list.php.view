@@ -1,6 +1,4 @@
 <style>
-~~cms/media/dropzone/5.1.1/dropzone.css
-~~cms/media/ci/assets/media-cms.css
 tbody tr {cursor:pointer}
 </style>
 
@@ -46,10 +44,11 @@ tbody tr {cursor:pointer}
  <?= $this->pagination->create_links(); ?>
 </div>
 
-~~cms/media/ci/views/dlg-media-update-meta.div
+~~cms/media/ci/views/dlg-media-update-meta.20220101.div
 <script src="/assets/js/cms.js"></script>
 <script>
-	var $frm = $('#dlg-media-edit form');
+//	var $frm = $('#dlg-media-edit form');
+	var $frm = $('#dlg-media-picker form');
 
 	// fix form to allow updates
 	$frm.prepend('<input name="id" type="hidden" />');
