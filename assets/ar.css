@@ -4,6 +4,7 @@
 	background: <P2>;
 background:transparent;
 	position: relative;
+	width:100%
 	}
 .ar > :first-child {
 	position: absolute;
@@ -11,9 +12,11 @@ background:transparent;
 	left: 0;
 	width: 100%;
 	bottom:0;
+	height:100%
 	}
 .ar1x1 {padding-bottom:100%!important}
 .ar2x1 {padding-bottom:50%!important}
 .ar3x2 {padding-bottom:65%!important}
+.ar4x3 {padding-bottom:75%!important}
 .ar7x4 {padding-bottom:57.14%!important}
 .ar16x9 {padding-bottom:56.25%!important}
