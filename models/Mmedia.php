@@ -94,6 +94,18 @@ class Mmedia extends MY_Model {
 		return $it;
 		}
 
+	/**
+	*  takes csv of mids as a string
+	**********************************/
+	public function get_mids($mids) {
+		$it = $this->db
+			->select('*')
+			->where('id in ('.$mids.' )')
+			->get('media')
+			->result_array();
+		return $this->add_exts($it);
+		}
+
 	public function paginated_list($base_url, $first, $per_page = 10, $num_links = 5, $order_by = '', $where=[]) {
 		$it = parent::paginated_list($base_url, $first, $per_page, $num_links, $order_by, $where);
 		return $this->add_exts($it);
