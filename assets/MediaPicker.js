@@ -23,7 +23,8 @@
 		mode:'replace', // or 'append'
 		btn: null,
 		selector: null, // used for $el.on('click', selector, function(){}...
-		verbose:!1
+		verbose:!1,
+		thumbClasses: 'col-lg-3 col-sm-4 col-xs-6',
 		};
 	const thumbMarkup = (meta) => `
 		<div class="thumbnail">
@@ -172,6 +173,10 @@
 		my.$el.trigger('MediaPicker:inited');
 		}
 
+	MediaPicker.prototype.clearGallery = function() {
+		this.$el.empty();
+		}
+
 	MediaPicker.prototype.csvIDs=function(){
 		var ids = '';
 		this.$el.find('img').each(function(){
@@ -180,15 +185,22 @@
 		return ids;
 		}
 
-	MediaPicker.prototype.append=function($img){
-		var my = this,
-			s = $img.attr('src'),
-			t = $img.attr('title'),
-			c = $img.attr('alt'),
-			i = $img.attr('mid');
+	// @csv of the aspect ratios
+	MediaPicker.prototype.csvARs=function(digits){
+		var ars = '';
+		this.$el.find('img').each(function(){
+			ars += (ars?',':'') + (this.naturalWidth / this.naturalHeight).toPrecision(digits);
+			});
+		return ars;
+		}
+
+	// (src, title, caption, mid)
+	MediaPicker.prototype.append=function(s, t, c, i){
+		const my = this;
+
 		if (my.$el.find('[mid=' + i +']').length) return UBOW.flashError('Media already inserted');
 		my.$el.append(`
-			<div class="col-lg-3 col-sm-4 col-xs-6 mp-media" style="text-align:center">
+			<div class="${my.opts.thumbClasses} mp-media" style="text-align:center">
 			 <div class="thumbnail same-height-always">
 			  <div class="thumb ar ar3x2">
 			   <img src="${s}" mid="${i}" class="img-responsive img-rounded" />
@@ -199,6 +211,17 @@
 			    ${t}<small class="display-block">${c}</small>
 			   </h6></div></div></div>`)
 			.alignElementsSameHeight();
+		}
+
+	// internal to append img
+	//  selected via the dialog
+	MediaPicker.prototype._append=function($img){
+		var my = this,
+			s = $img.attr('src'),
+			t = $img.attr('title'),
+			c = $img.attr('alt'),
+			i = $img.attr('mid');
+		this.append(s,t,c,i);
 		}
 
 	MediaPicker.prototype.replace=function($img){
@@ -218,7 +241,7 @@
 		if (my.opts.mode == 'replace')
 			my.replace($img);
 		else
-			my.append($img);
+			my._append($img);
 		my.opts.onChange && my.opts.onChange($img, my.$clicked);
 		}
 
