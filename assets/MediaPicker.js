@@ -25,6 +25,8 @@
 		selector: null, // used for $el.on('click', selector, function(){}...
 		verbose:!1,
 		thumbClasses: 'col-lg-3 col-sm-4 col-xs-6',
+		// onChange: ($img) => console.log img deleted
+		// onDelete: () => console.log img deleted
 		};
 	const thumbMarkup = (meta) => `
 		<div class="thumbnail">
@@ -169,6 +171,7 @@
 			my.$el.on('click', '.delete', function(e) {
 				e.preventDefault();
 				$(this).closest('.mp-media').remove();
+				my.opts.onDelete && my.opts.onDelete();
 				});
 		my.$el.trigger('MediaPicker:inited');
 		}
@@ -177,6 +180,7 @@
 		this.$el.empty();
 		}
 
+	// @return csv of mids (media ids)
 	MediaPicker.prototype.csvIDs=function(){
 		var ids = '';
 		this.$el.find('img').each(function(){
@@ -185,7 +189,7 @@
 		return ids;
 		}
 
-	// @csv of the aspect ratios
+	// @return csv of the aspect ratios
 	MediaPicker.prototype.csvARs=function(digits){
 		var ars = '';
 		this.$el.find('img').each(function(){
@@ -211,6 +215,7 @@
 			    ${t}<small class="display-block">${c}</small>
 			   </h6></div></div></div>`)
 			.alignElementsSameHeight();
+		return my.$el.find(`img[mid=${i}]`);
 		}
 
 	// internal to append img
@@ -221,7 +226,7 @@
 			t = $img.attr('title'),
 			c = $img.attr('alt'),
 			i = $img.attr('mid');
-		this.append(s,t,c,i);
+		return this.append(s,t,c,i);
 		}
 
 	MediaPicker.prototype.replace=function($img){
@@ -241,7 +246,7 @@
 		if (my.opts.mode == 'replace')
 			my.replace($img);
 		else
-			my._append($img);
+			$img = my._append($img);
 		my.opts.onChange && my.opts.onChange($img, my.$clicked);
 		}
 
