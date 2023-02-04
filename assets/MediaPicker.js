@@ -5,11 +5,12 @@
 * Copyright 2018 - 2020, ShaneBow
 * http://www.shanebow.com
 *
-* 20211120 rts 3.1.2 added selector opt to handle tables
-* 20211023 rts 3.1.1 added onChange()
-* 20201209 rts 3.0.0 added search capability
-* 20190707 rts 2.3.1 added ImageUploader
-* 20180331 rts 2.0.0 support multiple instance, append, replace
+* 20230204 rts added custom mode
+* 20211120 rts added selector opt to handle tables
+* 20211023 rts added onChange()
+* 20201209 rts added search capability
+* 20190707 rts added ImageUploader
+* 20180331 rts support multiple instance, append, replace
 *
 */
 ;( function( window ) {
@@ -20,7 +21,7 @@
 	var exts = ['','jpg','png','gif'];
 	var defaults = {
 		$dlg: $('#dlg-media-picker'),
-		mode:'replace', // or 'append'
+		mode:'replace', // or 'append' or 'custom'
 		btn: null,
 		selector: null, // used for $el.on('click', selector, function(){}...
 		verbose:!1,
@@ -245,6 +246,10 @@
 	//	if (my.opts.onSelect) return my.opts.onSelect($img);
 		if (my.opts.mode == 'replace')
 			my.replace($img);
+		else if (my.opts.mode == 'custom') {
+			$img = $img.clone(); // copy image
+			my.opts.$dlg.modal('hide'); // close then onChange below
+			}
 		else
 			$img = my._append($img);
 		my.opts.onChange && my.opts.onChange($img, my.$clicked);
