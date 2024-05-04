@@ -1,0 +1,9 @@
+   <fieldset class="content-group">
+    <legend class="text-bold">
+     ~~cms/media/ci/views/btn-launch-picker.div
+     Gallery
+    </legend>
+    <div id="gallery" class="row same-height-row">
+     ~~cms/media/ci/views/media-thumbs-editor.php.div
+    </div>
+   </fieldset>

@@ -1,3 +1,3 @@
       <div class="clear">
-       <a id="btn-media-pick" href="#" class="btn border-slate text-slate-800 btn-flat pull-right"><i class="icon-file-plus position-left"></i> Media Picker</a>
+       <a id="btn-media-pick" href="#" class="btn text-slate-800 btn-flat pull-right"><i class="icon-file-plus position-left"></i> Media Picker</a>
       </div>
