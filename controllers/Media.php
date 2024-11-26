@@ -91,7 +91,7 @@ class Media extends MY_Controller {
 			if ($term[0] == '#')
 				$where = ['id' => substr($term, 1)];
 			else
-				$where = ['title LIKE' => '%'.$_POST['like'].'%'];
+				$where = ['title LIKE' => "'%$term%'"];
 			}
 		$this->load->model('mmedia');
 		try {
