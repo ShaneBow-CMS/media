@@ -17,7 +17,7 @@ class Media extends MY_Controller {
 			}
 		catch (Exception $e) {$imgs = [];}
 		$data['media'] = $imgs;
-		$this->load->view('admin/media-list', $data);
+		$this->load->view('admin/cms-media-list', $data);
 		}
 
 	public function details($id='0') {
