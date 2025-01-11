@@ -69,29 +69,34 @@ $_SERVER:
 log_message('debug', "Asset log target: $target fspec: '$fspec'");
 		$pre = $now.','.$method.','.$target;
 		$out = fopen($fspec, 'a');
-//fwrite($out, print_r($_SERVER, true)."\n");
 		foreach (getallheaders() as $name => $value) {
 			fwrite($out, "$pre,$name,\"$value\"\n");
 			}
 		fclose($out);
 		}
 
-private function _json_respond($code, $msg, $dat='') {
-	$this->_jsonOut(['err'=>$code,'msg'=>$msg,'dat'=>$dat]);
-	}
+	private function _jsonOut($dat) {
+		$method = $_SERVER['REQUEST_METHOD'];
+		header('Access-Control-Allow-Origin: *');
+		$it = json_encode($dat);
+		header('Content-Type: application/json');
+		exit($it);
+		}
 
-// note: CORS allowed!
-private function _jsonOut($dat) {
-	$method = $_SERVER['REQUEST_METHOD'];
-	header('Access-Control-Allow-Origin: *');
-	$it = json_encode($dat);
-	header('Content-Type: application/json');
-	exit($it);
-	}
+	private function _json_respond($code, $msg, $dat='') {
+		$this->_jsonOut(['err'=>$code,'msg'=>$msg,'dat'=>$dat]);
+		}
+
 	public function get_log() {
 		$fspec = realpath(APPPATH.'../public_html/assets/files').'/asset-log.csv';
 		$dat = file_get_contents($fspec);
-$this->_json_respond(0, 'ok', explode("\n", $dat));
+		$this->_json_respond(0, 'ok', explode("\n", $dat));
+		}
+
+	public function truncate_log() {
+		$fspec = realpath(APPPATH.'../public_html/assets/files').'/asset-log.csv';
+		file_put_contents($fspec, '');
+		$this->_json_respond(0, 'log truncated', '');
 		}
 
 	private function _head($file) {
