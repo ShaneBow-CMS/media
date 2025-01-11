@@ -2,12 +2,13 @@
 
 // require_once APPPATH . 'core/Ajax_controller.php';
 class Asset { // extends Ajax_controller {
+	
 
 	function __construct() {
 //		parent::__construct();
-//		log_message('info', 'Asset ctor: '.current_url());
 		log_message('debug', 'Asset ctor!');
 		$method = $_SERVER['REQUEST_METHOD'];
+		$this->_dump_headers($method);
 		header('Access-Control-Allow-Origin: *');
 		if ($method == "OPTIONS") {
 			header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Authorization");
@@ -16,18 +17,82 @@ class Asset { // extends Ajax_controller {
 			}
 		}
 
-	public function index() {
-		$this->load->model(['mmedia','musers']);
-		$data['title'] = 'Asset Table';
-		try {
-			$order_by = 'id';
-			$where = [];
-			$imgs = $this->mmedia->paginated_list('/media/index',
-				$this->uri->segment(3), 20, 5, $order_by, $where);
+/***
+$_SERVER:
+    [REDIRECT_STATUS] => 200
+    [HTTP_HOST] => thaidrills.local
+    [HTTP_USER_AGENT] => Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0
+    [HTTP_ACCEPT] => image/avif,image/webp,image/png,image/svg+xml,image/ *;q=0.8,* / *;q=0.5
+    [HTTP_ACCEPT_LANGUAGE] => en-US,en;q=0.5
+    [HTTP_ACCEPT_ENCODING] => gzip, deflate
+    [HTTP_CONNECTION] => keep-alive
+    [HTTP_REFERER] => http://shanebow.local/
+    [HTTP_PRIORITY] => u=5, i
+    [HTTP_PRAGMA] => no-cache
+    [HTTP_CACHE_CONTROL] => no-cache
+    [PATH] => C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\NVIDIA\CUDNN\v9.4\bin;D:\bin\python\python3.11\Scripts\;D:\bin\python\python3.11\;d:\bin\gradle\gradle-8.10.2\bin;C:\Program Files\Java\jdk-17.0.12+7\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\ProgramData\ComposerSetup\bin;C:\ProgramData\chocolatey\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\nodejs\;D:\bin\apache-maven-3.9.9\bin\;C:\Program Files\Git\cmd;C:\Program Files (x86)\Bitvise SSH Client;C:\WINDOWS\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps
+    [SystemRoot] => C:\WINDOWS
+    [COMSPEC] => C:\WINDOWS\system32\cmd.exe
+    [PATHEXT] => .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+    [WINDIR] => C:\WINDOWS
+    [SERVER_SIGNATURE] => <address>Apache/2.4.46 (Win64) PHP/7.4.9 Server at thaidrills.local Port 80</address>
+
+    [SERVER_SOFTWARE] => Apache/2.4.46 (Win64) PHP/7.4.9
+    [SERVER_NAME] => thaidrills.local
+    [SERVER_ADDR] => 127.0.0.1
+    [SERVER_PORT] => 80
+    [REMOTE_ADDR] => 127.0.0.1
+    [DOCUMENT_ROOT] => D:/www/thaidrills/public_html
+    [REQUEST_SCHEME] => http
+    [CONTEXT_PREFIX] => 
+    [CONTEXT_DOCUMENT_ROOT] => D:/www/thaidrills/public_html
+    [SERVER_ADMIN] => wampserver@wampserver.invalid
+    [SCRIPT_FILENAME] => D:/www/thaidrills/public_html/index.php
+    [REMOTE_PORT] => 55981
+    [REDIRECT_URL] => /api/asset/a/11/cream
+    [REDIRECT_QUERY_STRING] => /api/asset/a/11/cream
+    [GATEWAY_INTERFACE] => CGI/1.1
+    [SERVER_PROTOCOL] => HTTP/1.1
+    [REQUEST_METHOD] => GET
+    [QUERY_STRING] => 
+    [REQUEST_URI] => /api/asset/a/11/cream
+    [SCRIPT_NAME] => /index.php
+    [PHP_SELF] => /index.php
+    [REQUEST_TIME_FLOAT] => 1736623949.3749
+    [REQUEST_TIME] => 1736623949
+***/
+	private function _dump_headers($method) {
+		$fspec = realpath(APPPATH.'../public_html/assets/files').'/asset-log.csv';
+
+		$now = time();
+		$target = explode('/', $_SERVER['REQUEST_URI'],4)[3];
+log_message('debug', "Asset log target: $target fspec: '$fspec'");
+		$pre = $now.','.$method.','.$target;
+		$out = fopen($fspec, 'a');
+//fwrite($out, print_r($_SERVER, true)."\n");
+		foreach (getallheaders() as $name => $value) {
+			fwrite($out, "$pre,$name,\"$value\"\n");
 			}
-		catch (Exception $e) {$imgs = [];}
-		$data['media'] = $imgs;
-		$this->load->view('admin/cms-media-list', $data);
+		fclose($out);
+		}
+
+private function _json_respond($code, $msg, $dat='') {
+	$this->_jsonOut(['err'=>$code,'msg'=>$msg,'dat'=>$dat]);
+	}
+
+// note: CORS allowed!
+private function _jsonOut($dat) {
+	$method = $_SERVER['REQUEST_METHOD'];
+	header('Access-Control-Allow-Origin: *');
+	$it = json_encode($dat);
+	header('Content-Type: application/json');
+	exit($it);
+	}
+	public function get_log() {
+$this->_json_respond(0, 'hello', '');
+		}
+
+	private function _head($file) {
 		}
 
 	private function _respond($file) {
