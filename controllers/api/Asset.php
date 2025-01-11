@@ -8,7 +8,7 @@ class Asset { // extends Ajax_controller {
 //		parent::__construct();
 		log_message('debug', 'Asset ctor!');
 		$method = $_SERVER['REQUEST_METHOD'];
-		$this->_dump_headers($method);
+		$this->_log_headers($method);
 		header('Access-Control-Allow-Origin: *');
 		if ($method == "OPTIONS") {
 			header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Authorization");
@@ -61,7 +61,7 @@ $_SERVER:
     [REQUEST_TIME_FLOAT] => 1736623949.3749
     [REQUEST_TIME] => 1736623949
 ***/
-	private function _dump_headers($method) {
+	private function _log_headers($method) {
 		$fspec = realpath(APPPATH.'../public_html/assets/files').'/asset-log.csv';
 
 		$now = time();
@@ -89,7 +89,9 @@ private function _jsonOut($dat) {
 	exit($it);
 	}
 	public function get_log() {
-$this->_json_respond(0, 'hello', '');
+		$fspec = realpath(APPPATH.'../public_html/assets/files').'/asset-log.csv';
+		$dat = file_get_contents($fspec);
+$this->_json_respond(0, 'ok', explode("\n", $dat));
 		}
 
 	private function _head($file) {
