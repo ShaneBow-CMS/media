@@ -7,7 +7,8 @@ class Mmedia extends MY_Model {
 	static $media_types = [
 		1 => 'jpg',
 		2 => 'png',
-		3 => 'gif'
+		3 => 'gif',
+		4 => 'webp'
 		];
 
 	public function __construct() {
@@ -28,7 +29,7 @@ class Mmedia extends MY_Model {
 
 		$config = [
 		//	'max_size' => 2000,
-			'allowed_types' => 'jpg|jpeg|gif|png',
+			'allowed_types' => 'jpg|jpeg|gif|png|webp',
 			'overwrite' => TRUE,
 			'file_name' => "$id.$ext",
 			'upload_path' => realpath(APPPATH.'../public_html'.$path)
@@ -62,7 +63,7 @@ class Mmedia extends MY_Model {
 
 		$config = [
 		//	'max_size' => 2000,
-			'allowed_types' => 'jpg|jpeg|gif|png',
+			'allowed_types' => 'jpg|jpeg|gif|png|webp',
 			'overwrite' => TRUE,
 			'file_name' => "{$meta['id']}.$ext",
 			'upload_path' => $this->upload_path

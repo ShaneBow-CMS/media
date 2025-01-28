@@ -18,7 +18,7 @@
 
 	var _instance;
 	var $formUpload = $('form.dropzone');
-	var exts = ['','jpg','png','gif'];
+	var exts = ['','jpg','png','gif','webp'];
 	var defaults = {
 		$dlg: $('#dlg-media-picker'),
 		mode:'replace', // or 'append' or 'custom'

@@ -4,7 +4,7 @@ $(function() {
 	var $pag = $('#mediadb-paging');
 	var tmpl_0 = '<div class="thumbnail"><div class="thumb ar ar3x2"><img ';
 	var tmpl_1 = '"><span class="zoom-image"><i class="icon-plus22"></i></span></div></div>';
-	var exts = ['','jpg','png','gif'];
+	var exts = ['','jpg','png','gif','webp'];
 
 	function thumb(meta) {
 		var ext = exts[meta.type_id];
