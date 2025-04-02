@@ -16,10 +16,11 @@
 ;( function( window ) {
 	'use strict';
 
-	var _instance;
+	let _instance;
 	var $formUpload = $('form.dropzone');
-	var exts = ['','jpg','png','gif','webp'];
-	var defaults = {
+	const exts = ['','jpg','png','gif','webp'];
+	const extsList = exts.filter(e => e.length).map(e => `.${e}`).join(',');
+	const defaults = {
 		$dlg: $('#dlg-media-picker'),
 		mode:'replace', // or 'append' or 'custom'
 		btn: null,
@@ -76,11 +77,12 @@
 			e.preventDefault();
 			e.stopPropagation();
 			if ((dropper.getQueuedFiles().length == 0) && $form.hasClass('update')) {
-				NBOW.ajaxForm($(this),'/media/upload_single',{},reloadPage);
+				UBOW.ajaxForm($(this),'/media/upload_single',{},reloadPage);
 				}
 			else dropper.processQueue();
 			});
 
+console.log(`MediaPicker exts: "${extsList}"`);
 		dropper = new Dropzone($form.get(0), {
 			url: url,
 			paramName: "userfile", // field name to transfer file
@@ -88,7 +90,7 @@
 			maxFiles: 1,
 			clickable:'.dropzone-previews',
 			previewsContainer: '.dropzone-previews',
-			acceptedFiles: '.jpg,.png,.gif', // "audio/*,image/*,.psd,.pdf",
+			acceptedFiles: extsList, // '.jpg,.png,.gif', // "audio/*,image/*,.psd,.pdf",
 			dictDefaultMessage: 'Drop file to upload <span>or CLICK</span>',
 			autoProcessQueue: false,
 			init: function() {
@@ -147,9 +149,10 @@
 
 		my.$el = $(el);
 		my.opts = $.extend({}, defaults, options);
-		if (my.opts.verbose) console.log('MediaPicker('+el+')');
-		if (my.opts.verbose) UBOW.dump(my.opts,'MediaPicker.settings');
-
+		if (my.opts.verbose) {
+			console.log('MediaPicker('+el+')');
+			UBOW.dump(my.opts,'MediaPicker.settings');
+			}
 		$(function(){
 			my._init()
 			});
