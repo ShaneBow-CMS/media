@@ -45,7 +45,7 @@ tbody tr {cursor:pointer}
 </div>
 
 ~~cms/media/ci/views/dlg-media-update-meta.div
-<script src="/assets/js/cms.js"></script>
+<script src="/assets/js/cms.js?ver=20250405"></script>
 <script>
 //	var $frm = $('#dlg-media-edit form');
 	var $frm = $('#dlg-media-picker form');

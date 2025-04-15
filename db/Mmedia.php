@@ -61,6 +61,21 @@ class Mmedia extends MY_Model {
 		else $this->update_meta($meta);
 		if (!count($_FILES)) return $meta; // 'update meta only' request
 
+		// first delete any competing extensions
+		$fname = $this->upload_path.DIRECTORY_SEPARATOR.$meta['id'].'.';
+		foreach(self::$media_types as $e) {
+			$f = $fname.$e;
+			if (($e != $ext) && file_exists($f)) {
+				try {
+					$success = unlink($f);
+					log_message('debug', "Mmedia unlink($f): ".($success?'TRUE':'FALSE'));
+					}
+				catch(Exception $exc) {
+					log_message('debug', "Mmedia unlink($f) EXCEPTION: ".$exc);
+					}
+				}
+			}
+
 		$config = [
 		//	'max_size' => 2000,
 			'allowed_types' => 'jpg|jpeg|gif|png|webp',

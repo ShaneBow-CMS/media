@@ -2,7 +2,6 @@
 
 // require_once APPPATH . 'core/Ajax_controller.php';
 class Asset { // extends Ajax_controller {
-	
 
 	function __construct() {
 //		parent::__construct();
@@ -128,6 +127,31 @@ log_message('debug', "Asset log target: $target fspec: '$fspec'");
 		// passthru('cat '.$filespec);
 		readfile($filespec);
 		exit;
+		}
+
+	public function test($file) {
+/**
+{
+  "title": "The Basics - Networking",
+  "description": "Your app fetched this from a remote endpoint!",
+  "movies": [
+    { "id": "1", "title": "Star Wars", "releaseYear": "1977" },
+    { "id": "2", "title": "Back to the Future", "releaseYear": "1985" },
+    { "id": "3", "title": "The Matrix", "releaseYear": "1999" },
+    { "id": "4", "title": "Inception", "releaseYear": "2010" },
+    { "id": "5", "title": "Interstellar", "releaseYear": "2014" }
+  ]
+}
+**/
+		$dat = [
+			'title' => "Thai Drills Test",
+			'description' => 'Your app fetched this from '.$_SERVER['SERVER_NAME'],
+			];
+		$dat['movies'] = [
+			['title' => 'Rick', 'releaseYear' => 1959],
+			['title' => 'Paul', 'releaseYear' => 1961]
+			];
+		$this->_jsonOut($dat);
 		}
 
 	// return user avatar
