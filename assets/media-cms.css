@@ -3,6 +3,7 @@
 .thumb {cursor:pointer}
 .thumbnail {
 	font-size:12px;
+	position:relative;
 	}
 .thumbnail .delete {
 	background: #fff;
