@@ -1,5 +1,10 @@
 <style>
-tbody tr {cursor:pointer}
+thead tr {cursor:pointer; border-left: 2px solid #ddd}
+tbody tr {cursor:pointer; border-left: 2px solid #777}
+tbody tr[mtype='1'] {border-left-color: orange} /* jpg */
+tbody tr[mtype='2'] {border-left-color: red} /* png */
+tbody tr[mtype='3'] {border-left-color: purple} /* gif */
+tbody tr[mtype='4'] {border-left-color: blue} /* webp */
 </style>
 
 <table id="media-table" class="table table-striped table-bordered table-hover">
@@ -15,7 +20,7 @@ tbody tr {cursor:pointer}
  </thead>
  <tbody>
    <?php foreach ($media as $m): ?>
-    <tr class="odd gradeX" data-id="<?=$m['id']?>"
+    <tr class="odd gradeX" data-id="<?=$m['id']?>" mtype="<?=$m['type_id']?>"
 			data-attribution="<?=$m['attribution']?>">
      <td>
       <?= $m['id'] ?>
