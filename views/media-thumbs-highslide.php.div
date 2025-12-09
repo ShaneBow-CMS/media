@@ -3,9 +3,9 @@
   <div class="<?= $col_class ?>" style="text-align:center">
    <div class="thumbnail same-height">
     <div class="thumb<?= (count($media) > 1)? ' ar ar3x2':'' ?>">
-     <a href="/uploads/<?= $m['id'] ?>.jpg" class="highslide" onclick="return hs.expand(this)">
-      <img src="/uploads/<?= $m['id'] ?>.jpg" class="img-responsive img-rounded"
-            alt="Highslide JS" title="Click to enlarge" />
+     <a href="<?= imgSrc($m['id'], $m['type_id']) ?>" class="highslide" onclick="return hs.expand(this)">
+      <img src="<?= imgSrc($m['id'], $m['type_id']) ?>" class="img-responsive img-rounded"
+            alt="<?= $m['caption'] ?>" title="Click to enlarge" />
      </a>
      <div class='highslide-caption'>
       <b><?= $m['title'] ?></b> &mdash; <?= $m['caption'] ?><br><small>Photo Credit: <?= $m['attribution'] ?></small>
